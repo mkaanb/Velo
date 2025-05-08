@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-  "start": "node index.js",
-  "dev": "nodemon index.js"
-},
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mkaanb/velo.git"
@@ -19,6 +19,8 @@
   "homepage": "https://github.com/mkaanb/velo#readme",
   "description": "",
   "dependencies": {
+    "@supabase/supabase-js": "^2.49.4",
+    "dayjs": "^1.11.13",
     "express": "^5.1.0"
   },
   "devDependencies": {
