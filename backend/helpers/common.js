@@ -2,6 +2,7 @@ const express = require('express');
 const validateFields = require('./validateFields');
 const supabase = require('../supabaseClient');
 const dayjs = require('dayjs');
+const buildSupabaseQuery = require('./queryBuilder');
 
 async function getUserId(req) {
     const token = req.headers.authorization?.split(' ')[1];
@@ -21,9 +22,9 @@ async function getUserId(req) {
 
 module.exports = {
     express,
-    router: express.Router(),
     validateFields,
     supabase,
     dayjs,
-    getUserId
+    getUserId,
+    buildSupabaseQuery
 };

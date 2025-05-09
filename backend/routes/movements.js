@@ -2,10 +2,10 @@ const { validateFields, supabase, dayjs, getUserId } = require('../helpers/commo
 const express = require('express');
 const router = express.Router();
 
-const TABLE_NAME = 'Products';
-const CREATE_MESSAGE = ' Kodlu ürün başarıyla yaratıldı!';
+const TABLE_NAME = 'Movements';
+const CREATE_MESSAGE = ' - Mal hareketi başarıyla gerçekleşti!';
 const KEY_FIELD = 'id';
-const SEARCH_FIELDS = [ 'id', 'name', 'type' ];
+const SEARCH_FIELDS = [ 'id', 'product', 'mov_type' ];
 
 // GET → Listeleme
 router.get('/', async (req, res) => {
@@ -28,8 +28,7 @@ router.post('/', async (req, res) => {
 // Data Manipulation
     // GETUSER     newData.changed_by = userId; 
     // GETUSER     newData.created_by = userId; 
-    newData.is_active = true;
-    newData.created_at = new Date().toISOString();
+
 // Data Manipulation
 
     const { data, error } = await supabase
@@ -46,8 +45,8 @@ router.put('/:id', async (req, res) => {
     const updatedData = req.body;
 
 // Data Manipulation
-   // GETUSER updatedData.changed_by = userId; 
-    updatedData.changed_at = dayjs().format();
+
+
 // Data Manipulation
 
     const { data, error } = await supabase

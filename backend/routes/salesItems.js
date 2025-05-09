@@ -2,10 +2,11 @@ const { validateFields, supabase, dayjs, getUserId } = require('../helpers/commo
 const express = require('express');
 const router = express.Router();
 
-const TABLE_NAME = 'Products';
-const CREATE_MESSAGE = ' Kodlu ürün başarıyla yaratıldı!';
+const TABLE_NAME = 'SalesItems';
+const CREATE_MESSAGE = ' - Satış siparişi kalemi başarıyla yaratıldı!';
 const KEY_FIELD = 'id';
-const SEARCH_FIELDS = [ 'id', 'name', 'type' ];
+const KEY_FIELD2 = 'item_id';
+const SEARCH_FIELDS = [ 'id', 'product', 'supplier' ];
 
 // GET → Listeleme
 router.get('/', async (req, res) => {
@@ -28,8 +29,7 @@ router.post('/', async (req, res) => {
 // Data Manipulation
     // GETUSER     newData.changed_by = userId; 
     // GETUSER     newData.created_by = userId; 
-    newData.is_active = true;
-    newData.created_at = new Date().toISOString();
+
 // Data Manipulation
 
     const { data, error } = await supabase
@@ -40,32 +40,36 @@ router.post('/', async (req, res) => {
 });
 
 // PUT → Veri Güncelleme
-router.put('/:id', async (req, res) => {
+router.put('/:id/:id2', async (req, res) => {
     // GETUSER const userId = await getUserId(req);
     const keyID = req.params.id;
+    const keyID2 = req.params.id2;
     const updatedData = req.body;
 
 // Data Manipulation
-   // GETUSER updatedData.changed_by = userId; 
-    updatedData.changed_at = dayjs().format();
+
+
 // Data Manipulation
 
     const { data, error } = await supabase
     .from(TABLE_NAME)
     .update(updatedData)
-    .eq(KEY_FIELD, keyID);
+    .eq(KEY_FIELD, keyID)
+    .eq(KEY_FIELD2, keyID2);
     if (error) return res.status(500).json({ error: error.message });
     res.status(204).json(keyID)
 });
 
 // DELETE → Veri Silme
-router.delete('/:id', async (req, res) => {
+router.delete('/:id/:id2', async (req, res) => {
     // GETUSER const userId = await getUserId(req);
     const keyID = req.params.id;
+    const keyID2 = req.params.id2;
     const response = await supabase
     .from(TABLE_NAME)
     .delete()
     .eq(KEY_FIELD, keyID)
+    .eq(KEY_FIELD2, keyID2);
     res.status(204).send();
 });
 

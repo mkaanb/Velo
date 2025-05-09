@@ -1,20 +1,26 @@
-const { router, validateFields, supabase, dayjs, getUserId } = require('../helpers/common');
+const { validateFields, supabase, dayjs, getUserId } = require('../helpers/common');
+const express = require('express');
+const router = express.Router();
+
 const TABLE_NAME = 'ProductTypes';
 const CREATE_MESSAGE = ' Kodlu ürün türü başarıyla yaratıldı!';
 const KEY_FIELD = 'type';
-
+const SEARCH_FIELDS = [ 'name', 'type' ];
 
 // GET → Listeleme
 router.get('/', async (req, res) => {
-    const { data, error } = await supabase
-        .from(TABLE_NAME)
-        .select('*');
+    
+    const query = buildSupabaseQuery(supabase, TABLE_NAME, req.query, SEARCH_FIELDS);
+    const { data, error } = await query;
+
     if (error) return res.status(500).json({ error: error.message });
+
     res.json(data);
 });
 
 
-// POST → Ürün Ekleme
+
+// POST → Veri Ekleme
 router.post('/', async (req, res) => {
     // GETUSER const userId = await getUserId(req);
     const newData = req.body;
@@ -22,26 +28,25 @@ router.post('/', async (req, res) => {
 // Data Manipulation
     // GETUSER     newData.changed_by = userId; 
     // GETUSER     newData.created_by = userId; 
-    newData.is_active = true;
-    newData.created_at = new Date().toISOString();
+
 // Data Manipulation
 
     const { data, error } = await supabase
         .from(TABLE_NAME)
         .insert(newData);
     if (error) return res.status(500).json({ error: error.message });
-    res.status(201).json(newData[KEY_FIELD] + CREATE_MESSAGE); // Eklenen ürünü geri döner
+    res.status(201).json(newData[KEY_FIELD] + CREATE_MESSAGE); // Eklenen veriyi geri döner
 });
 
-// PUT → Ürün Güncelleme
+// PUT → Veri Güncelleme
 router.put('/:id', async (req, res) => {
     // GETUSER const userId = await getUserId(req);
     const keyID = req.params.id;
     const updatedData = req.body;
 
 // Data Manipulation
-    updatedData.changed_by = userId; 
-    updatedData.changed_at = dayjs().format();
+
+
 // Data Manipulation
 
     const { data, error } = await supabase
@@ -52,7 +57,7 @@ router.put('/:id', async (req, res) => {
     res.status(204).json(keyID)
 });
 
-// DELETE → Ürün Silme
+// DELETE → Veri Silme
 router.delete('/:id', async (req, res) => {
     // GETUSER const userId = await getUserId(req);
     const keyID = req.params.id;
